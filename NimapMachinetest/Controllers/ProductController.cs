@@ -48,7 +48,7 @@ namespace NimapMachinetest.Controllers
         private List<ProductViewModel> GetProducts(int currentPage)
         {
 
-            int maxRows = 2;
+            int maxRows = 10;
             using (dBContext = new DataDBContext())
             {
                 List<ProductViewModel> model = new List<ProductViewModel>();
