@@ -38,7 +38,15 @@ namespace NimapMachinetest.Controllers
 
         [HttpPost]
         public ActionResult Create(Product model)
-        {          
+        {
+            int productId = (from product in dBContext.Products
+                              where model.ProductName.Equals(product.ProductName)
+                              where model.CategoryId.Equals(product.CategoryId)
+                              select product.ProductId).FirstOrDefault();
+
+            if (productId != 0)
+                return Json("Failure", JsonRequestBehavior.AllowGet);
+
 
             dBContext.Products.Add(model);
             dBContext.SaveChanges();
@@ -86,12 +94,19 @@ namespace NimapMachinetest.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Product product)
+        public ActionResult Edit(Product model)
         {
             try
             {
-                dBContext.Entry(product).State = EntityState.Modified;
+                int productId = (from product in dBContext.Products
+                                 where model.ProductName.Equals(product.ProductName)
+                                 where model.CategoryId.Equals(product.CategoryId)
+                                 select product.ProductId).FirstOrDefault();
 
+                if (productId != 0)
+                    return Json("Failure", JsonRequestBehavior.AllowGet);
+
+                dBContext.Entry(model).State = EntityState.Modified;
                 dBContext.SaveChanges();
                 return Json("Success", JsonRequestBehavior.AllowGet);
             }

@@ -87,8 +87,14 @@
                 url: "/Product/Edit",
                 data: data,
                 success: function (data) {
-                  
-                    window.location.href = "/Product/Index";
+                    if (data == "Failure") {
+                        alert("Product with selected Category already exists")
+                    }
+
+                    if (data == "Success") {
+                        alert("Product Updated Successfully");
+                        window.location.href = "/Product/Index";
+                    }
                 }
             });
 

@@ -34,16 +34,16 @@ namespace NimapMachinetest.Controllers
         public ActionResult Create(Category model)
         {
             int categoryId = (from Category in dBContext.Categories
-                              where model.CategoryName.Contains(Category.CategoryName)
+                              where model.CategoryName.Equals(Category.CategoryName)
                               select Category.CategoryId).FirstOrDefault();
 
             if(categoryId!=0)
-                return RedirectToAction("Create");
+                return Json("Failure", JsonRequestBehavior.AllowGet);
 
 
             dBContext.Categories.Add(model);
             dBContext.SaveChanges();
-            return RedirectToAction("List");
+            return Json("Success", JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Edit(int id)
@@ -55,13 +55,20 @@ namespace NimapMachinetest.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(int id,Category category)
+        public ActionResult Edit(Category model)
         {
             try
             {
-                dBContext.Entry(category).State = EntityState.Modified;
+                int categoryId = (from Category in dBContext.Categories
+                                  where model.CategoryName.Equals(Category.CategoryName)
+                                  select Category.CategoryId).FirstOrDefault();
+
+                if (categoryId != 0)
+                    return Json("Failure", JsonRequestBehavior.AllowGet);
+
+                dBContext.Entry(model).State = EntityState.Modified;
                 dBContext.SaveChanges();
-                return RedirectToAction("List");
+                return Json("Success", JsonRequestBehavior.AllowGet);
             }
             catch
             {
